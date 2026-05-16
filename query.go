@@ -139,8 +139,18 @@ func (q *Query) Iter(w World) iter.Seq[*Entry] {
 
 // Each iterates over all entities that match the query.
 func (q *Query) Each(w World, callback func(*Entry)) {
-	for entry := range q.Iter(w) {
+	q.EachUntil(w, func(entry *Entry) bool {
 		callback(entry)
+		return true
+	})
+}
+
+// EachUntil iterates over all entities that match query until callback returns false.
+func (q *Query) EachUntil(w World, callback func(*Entry) bool) {
+	for entry := range q.Iter(w) {
+		if !callback(entry) {
+			return
+		}
 	}
 }
 

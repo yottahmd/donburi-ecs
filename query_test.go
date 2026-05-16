@@ -218,3 +218,35 @@ func TestFirstEntity(t *testing.T) {
 		t.Errorf("entry with queryTagC should be nil")
 	}
 }
+
+func TestEachUntil(t *testing.T) {
+	world := donburi.NewWorld()
+	world.Create(queryTagC)
+	world.Create(queryTagA)
+	world.Create(queryTagA, queryTagB)
+
+	query := donburi.NewQuery(filter.Contains(queryTagC))
+
+	found := false
+	iterated := 0
+	query.EachUntil(world, func(entry *donburi.Entry) bool {
+		iterated++
+
+		tagC := queryTagC.Get(entry)
+		if tagC != nil {
+			found = true
+			return false
+		}
+		
+		// continuing iterating
+		return true
+	})
+
+	if !found {
+		t.Errorf("EachUntil should have found entry")
+	}
+
+	if iterated > 1 {
+		t.Errorf("EachUntil should have found item at first iteration")
+	}
+}
