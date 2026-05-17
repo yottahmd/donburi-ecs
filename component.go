@@ -60,6 +60,11 @@ func (c *ComponentType[T]) Each(w World, callback func(*Entry)) {
 	c.query.Each(w, callback)
 }
 
+// EachUntil iterates over the entities that have the component until callback returns false.
+func (c *ComponentType[T]) EachUntil(w World, callback func(*Entry) bool) {
+	c.query.EachUntil(w, callback)
+}
+
 // Iter returns an iterator for the entities that have the component.
 func (c *ComponentType[T]) Iter(w World) iter.Seq[*Entry] {
 	return c.query.Iter(w)
