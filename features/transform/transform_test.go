@@ -35,7 +35,7 @@ func TestTransform(t *testing.T) {
 	transform.SetWorldScale(parent, dmath.Vec2{X: 1, Y: 1})
 
 	testWorldTransform(t, child, &testTransform{
-		Position: dmath.Vec2{X: 1, Y: 2},
+		Position: dmath.Vec2{X: -2, Y: 1},
 		Rotation: 180,
 		Scale:    dmath.Vec2{X: 2, Y: 3},
 	})
@@ -43,7 +43,7 @@ func TestTransform(t *testing.T) {
 	transform.RemoveParent(parent, false)
 
 	testWorldTransform(t, child, &testTransform{
-		Position: dmath.Vec2{X: 1, Y: 2},
+		Position: dmath.Vec2{X: -2, Y: 1},
 		Rotation: 180,
 		Scale:    dmath.Vec2{X: 2, Y: 3},
 	})
@@ -106,7 +106,7 @@ func testWorldTransform(t *testing.T, entry *donburi.Entry, test *testTransform)
 	rot := transform.WorldRotation(entry)
 	scale := transform.WorldScale(entry)
 
-	if pos.X != test.Position.X || pos.Y != test.Position.Y {
+	if pos.Sub(test.Position).Magnitude() > dmath.Epsilon {
 		t.Errorf("expected position %v, but got %v", test.Position, pos)
 	}
 

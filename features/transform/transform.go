@@ -137,8 +137,8 @@ func SetWorldPosition(entry *donburi.Entry, pos dmath.Vec2) {
 
 	parent := mustGetHierarchyParent(entry)
 	parentPos := WorldPosition(parent)
-	d.LocalPosition.X = pos.X - parentPos.X
-	d.LocalPosition.Y = pos.Y - parentPos.Y
+	parentRot := dmath.ToRadians(WorldRotation(parent))
+	d.LocalPosition = pos.Sub(parentPos).Rotate(-parentRot)
 }
 
 // WorldPosition returns world position of the entry.
@@ -150,7 +150,8 @@ func WorldPosition(entry *donburi.Entry) dmath.Vec2 {
 
 	parent := mustGetHierarchyParent(entry)
 	parentPos := WorldPosition(parent)
-	return parentPos.Add(d.LocalPosition)
+	parentRot := dmath.ToRadians(WorldRotation(parent))
+	return parentPos.Add(d.LocalPosition.Rotate(parentRot))
 }
 
 // SetWorldRotation sets world rotation to the entry.
